@@ -14,5 +14,5 @@ import {
 const local_url = "http://127.0.0.1:3000/api/525050";
 const remote_url = "https://contest-stat.vercel.app/api/525050";
 export default async function Home() {
-  return <div>"hello"</div>;
+  return <div>hello</div>;
 }

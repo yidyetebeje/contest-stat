@@ -37,7 +37,6 @@ export default async function Home() {
   ];
   return (
     <main className="flex flex-col p-24 w-3/4 mx-auto">
-      <h1>{pathname}</h1>
       <div className="grid grid-cols-4 gap-5">
         {groups.map((el) => {
           return (

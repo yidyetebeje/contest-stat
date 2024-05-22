@@ -70,7 +70,7 @@ export default async function Home() {
       <h1 className="text-3xl font-extrabold py-10 text-start">
         Live Contest Standing
       </h1>
-      <Tabs defaultValue="all" className="w-full">
+      <Tabs defaultValue="All" className="w-full">
         <TabsList>
           {groups.map((el) => (
             <TabsTrigger key={el.name} value={el.name}>
@@ -102,7 +102,7 @@ export default async function Home() {
       <h1 className="text-3xl font-extrabold py-10 text-start">
         Virtual Contest Standing
       </h1>
-      <Tabs defaultValue="all" className="w-full">
+      <Tabs defaultValue="All" className="w-full">
         <TabsList>
           {groups.map((el) => (
             <TabsTrigger key={el.name} value={el.name}>
@@ -135,7 +135,7 @@ export default async function Home() {
       <h1 className="text-3xl font-extrabold py-10 text-start">
         Student with No Submission or Absent
       </h1>
-      <Tabs defaultValue="all" className="w-full">
+      <Tabs defaultValue="All" className="w-full">
         <TabsList>
           {groups.map((el) => (
             <TabsTrigger key={el.name} value={el.name}>

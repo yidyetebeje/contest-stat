@@ -11,9 +11,8 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-
 export default async function Home() {
-  let data = await fetch("http://localhost:3000/api/524965", {
+  let data = await fetch("https://contest-stat.vercel.app/api/524965", {
     cache: "no-cache",
   });
   data = await data.json();
@@ -38,6 +37,7 @@ export default async function Home() {
   ];
   return (
     <main className="flex flex-col p-24 w-3/4 mx-auto">
+      <h1>{pathname}</h1>
       <div className="grid grid-cols-4 gap-5">
         {groups.map((el) => {
           return (

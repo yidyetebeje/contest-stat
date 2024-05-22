@@ -1,4 +1,4 @@
-import { Contest } from "@/utilities/codeforcesquery";
+import { Contest, ContestVirtual } from "@/utilities/codeforcesquery";
 import { NextRequest } from "next/server";
 
 export async function GET(

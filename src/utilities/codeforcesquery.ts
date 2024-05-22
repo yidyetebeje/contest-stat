@@ -2,6 +2,53 @@ import crypto from "crypto";
 // Create a MongoClient with a MongoClientOptions object to set the Stable API version
 export const apiKey = "44cfcb065b39a1d98756b6d4335dacfb1274be38";
 export const secret = "0ce71e2af1be124c5f1c5d45a3ebef42dcc24a92";
+export async function ContestVirtual(contestId: string) {
+  const from = 1;
+  const count = 300;
+  const showUnofficial = true;
+  const base_url = `https://codeforces.com/api/contest.standings?contestId=${contestId}&from=${from}&count=${count}&showUnofficial=${showUnofficial}`;
+  const timestamp = Math.round(new Date().getTime() / 1000);
+  const start = 123456;
+  const apiSign = `${start}/contest.standings?apiKey=${apiKey}&contestId=${contestId}&count=${count}&from=${from}&showUnofficial=${showUnofficial}&time=${timestamp}#${secret}`;
+  const apiSig = crypto.createHash("sha512").update(apiSign).digest("hex");
+  const url = `${base_url}&apiKey=${apiKey}&time=${timestamp}&apiSig=${start}${apiSig}`;
+  const response = await fetch(url, {
+    method: "GET",
+    cache: "no-store",
+  });
+  const data = await response.json();
+  let virtualParticipant = data.result.rows.filter(
+    (el) => el.party.participantType === "VIRTUAL",
+  );
+  let participantInfo = virtualParticipant.map((el: any) => {
+    return {
+      handle: el.party.members[0].handle.toLowerCase(),
+      rank: el.rank,
+      solvedInContest: el.points,
+    };
+  });
+
+  let ghanastudent = participantInfo.filter((info) =>
+    ghana.includes(info.handle),
+  );
+  let aastug4student = participantInfo.filter((info) =>
+    aastug4.includes(info.handle),
+  );
+
+  let AAIT_G4student = participantInfo.filter((info) =>
+    AAIT_G4.includes(info.handle),
+  );
+  let g5students = participantInfo.filter((info) =>
+    G5education.includes(info.handle),
+  );
+
+  return {
+    ghanastudent,
+    aastug4student,
+    AAIT_G4student,
+    g5students,
+  };
+}
 export async function Contest(contestId: string) {
   const from = 1;
   const count = 300;
@@ -24,13 +71,14 @@ export async function Contest(contestId: string) {
       solvedInContest: el.points,
     };
   });
-
+  let virtualData = await ContestVirtual(contestId);
   let ghanastudent = participantInfo.filter((info) =>
     ghana.includes(info.handle),
   );
   let aastug4student = participantInfo.filter((info) =>
     aastug4.includes(info.handle),
   );
+
   let AAIT_G4student = participantInfo.filter((info) =>
     AAIT_G4.includes(info.handle),
   );
@@ -39,21 +87,39 @@ export async function Contest(contestId: string) {
   );
 
   console.log(g5students);
-  let g5nosumbission = noSubmission(participantInfo, G5education);
-  let averageSolve = averageSolved(g5students);
   return {
-    g5nosumbission,
     averageSolved: {
-      g5students: averageSolved(g5students),
-      ghanastudent: averageSolved(ghanastudent),
-      AAIT_G4student: averageSolved(AAIT_G4student),
-      aastug4student: averageSolved(aastug4student),
+      g5students: averageSolved(g5students.concat(virtualData.g5students)),
+      ghanastudent: averageSolved(
+        ghanastudent.concat(virtualData.ghanastudent),
+      ),
+      AAIT_G4student: averageSolved(
+        AAIT_G4student.concat(virtualData.AAIT_G4student),
+      ),
+      aastug4student: averageSolved(
+        aastug4student.concat(virtualData.aastug4student),
+      ),
     },
     noSubmission: {
-      g5students: noSubmission(g5students, G5education),
-      ghanastudent: noSubmission(ghanastudent, ghana),
-      AAIT_G4student: noSubmission(AAIT_G4student, AAIT_G4),
-      aastug4student: noSubmission(aastug4student, aastug4),
+      g5students: noSubmission(
+        g5students.concat(virtualData.g5students),
+        G5education,
+      ),
+      ghanastudent: noSubmission(
+        ghanastudent.concat(virtualData.ghanastudent),
+        ghana,
+      ),
+      AAIT_G4student: noSubmission(
+        AAIT_G4student.concat(virtualData.AAIT_G4student),
+        AAIT_G4,
+      ),
+      aastug4student: noSubmission(
+        aastug4student.concat(virtualData.aastug4student),
+        aastug4,
+      ),
+    },
+    virtual: {
+      ...virtualData,
     },
     ghanastudent,
     aastug4student,
@@ -66,8 +132,8 @@ function averageSolved(arr) {
   arr.forEach((el) => {
     ans += el.solvedInContest;
   });
-  ans = ans / arr.length;
-  return ans;
+  ans = arr.length == 0 ? 0 : ans / arr.length;
+  return ans.toFixed(2);
 }
 function noSubmission(contest, main) {
   let filtered = main.filter((el) => {

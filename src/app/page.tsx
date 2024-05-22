@@ -13,7 +13,7 @@ import {
 } from "@/components/ui/card";
 
 export default async function Home() {
-  let data = await fetch("http://localhost:3000/api/523525", {
+  let data = await fetch("http://localhost:3000/api/524965", {
     cache: "no-cache",
   });
   data = await data.json();
@@ -38,10 +38,10 @@ export default async function Home() {
   ];
   return (
     <main className="flex flex-col p-24 w-3/4 mx-auto">
-      <div class="grid grid-cols-4 gap-5">
+      <div className="grid grid-cols-4 gap-5">
         {groups.map((el) => {
           return (
-            <Card>
+            <Card key={el.name}>
               <CardHeader>
                 <CardTitle>Average Solved</CardTitle>
               </CardHeader>
@@ -58,17 +58,19 @@ export default async function Home() {
         })}
       </div>
       <h1 className="text-3xl font-extrabold py-10 text-start">
-        Contest Standing
+        Live Contest Standing
       </h1>
       <Tabs defaultValue="G5 student" className="w-full">
         <TabsList>
           {groups.map((el) => (
-            <TabsTrigger value={el.name}>{el.name}</TabsTrigger>
+            <TabsTrigger key={el.name} value={el.name}>
+              {el.name}
+            </TabsTrigger>
           ))}
         </TabsList>
         {groups.map((el) => {
           return (
-            <TabsContent value={el.name}>
+            <TabsContent value={el.name} key={el.name}>
               <Suspense fallback={<div>Loading</div>}>
                 <div className="w-full">
                   <DataTable
@@ -88,17 +90,52 @@ export default async function Home() {
         <TabsContent value="password">Change your password here.</TabsContent>
       </Tabs>
       <h1 className="text-3xl font-extrabold py-10 text-start">
+        Virtual Contest Standing
+      </h1>
+      <Tabs defaultValue="G5 student" className="w-full">
+        <TabsList>
+          {groups.map((el) => (
+            <TabsTrigger key={el.name} value={el.name}>
+              {el.name}
+            </TabsTrigger>
+          ))}
+        </TabsList>
+        {groups.map((el) => {
+          return (
+            <TabsContent value={el.name} key={el.name}>
+              <Suspense fallback={<div>Loading</div>}>
+                <div className="w-full">
+                  <DataTable
+                    columns={columns}
+                    data={data.virtual[el.accessor].map((d, index) => {
+                      return {
+                        ...d,
+                        index: index + 1,
+                      };
+                    })}
+                  />
+                </div>
+              </Suspense>
+            </TabsContent>
+          );
+        })}
+        <TabsContent value="password">Change your password here.</TabsContent>
+      </Tabs>
+
+      <h1 className="text-3xl font-extrabold py-10 text-start">
         Student with No Submission or Absent
       </h1>
       <Tabs defaultValue="G5 student" className="w-full">
         <TabsList>
           {groups.map((el) => (
-            <TabsTrigger value={el.name}>{el.name}</TabsTrigger>
+            <TabsTrigger key={el.name} value={el.name}>
+              {el.name}
+            </TabsTrigger>
           ))}
         </TabsList>
         {groups.map((el) => {
           return (
-            <TabsContent value={el.name}>
+            <TabsContent key={el.name} value={el.name}>
               <Suspense fallback={<div>Loading</div>}>
                 <div className="w-full">
                   <DataTable

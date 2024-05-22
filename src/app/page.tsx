@@ -11,13 +11,24 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+const local_url = "http://127.0.0.1:3000/api/525050";
+const remote_url = "https://contest-stat.vercel.app/api/525050";
 export default async function Home() {
-  let data = await fetch("https://contest-stat.vercel.app/api/524965", {
+  let data = await fetch(local_url, {
     cache: "no-cache",
   });
   data = await data.json();
+  data.noSubmission.all = data.noSubmission["g5students"].concat(
+    data.noSubmission["ghanastudent"],
+    data.noSubmission["AAIT_G4student"],
+    data.noSubmission["aastug4student"],
+  );
   console.log(data);
   let groups = [
+    {
+      name: "All",
+      accessor: "all",
+    },
     {
       name: "G5 student",
       accessor: "g5students",
@@ -59,7 +70,7 @@ export default async function Home() {
       <h1 className="text-3xl font-extrabold py-10 text-start">
         Live Contest Standing
       </h1>
-      <Tabs defaultValue="G5 student" className="w-full">
+      <Tabs defaultValue="all" className="w-full">
         <TabsList>
           {groups.map((el) => (
             <TabsTrigger key={el.name} value={el.name}>
@@ -91,7 +102,7 @@ export default async function Home() {
       <h1 className="text-3xl font-extrabold py-10 text-start">
         Virtual Contest Standing
       </h1>
-      <Tabs defaultValue="G5 student" className="w-full">
+      <Tabs defaultValue="all" className="w-full">
         <TabsList>
           {groups.map((el) => (
             <TabsTrigger key={el.name} value={el.name}>
@@ -124,7 +135,7 @@ export default async function Home() {
       <h1 className="text-3xl font-extrabold py-10 text-start">
         Student with No Submission or Absent
       </h1>
-      <Tabs defaultValue="G5 student" className="w-full">
+      <Tabs defaultValue="all" className="w-full">
         <TabsList>
           {groups.map((el) => (
             <TabsTrigger key={el.name} value={el.name}>
@@ -139,7 +150,7 @@ export default async function Home() {
                 <div className="w-full">
                   <DataTable
                     columns={absentColumns}
-                    data={data.noSubmission[el.accessor].map((d, index) => {
+                    data={data.noSubmission[el.accessor]?.map((d, index) => {
                       return {
                         handle: d,
                         index: index + 1,

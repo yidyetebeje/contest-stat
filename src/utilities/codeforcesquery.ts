@@ -43,6 +43,7 @@ export async function ContestVirtual(contestId: string) {
   );
 
   return {
+    all: participantInfo,
     ghanastudent,
     aastug4student,
     AAIT_G4student,
@@ -86,9 +87,9 @@ export async function Contest(contestId: string) {
     G5education.includes(info.handle),
   );
 
-  console.log(g5students);
   return {
     averageSolved: {
+      all: averageSolved(participantInfo.concat(virtualData.all)),
       g5students: averageSolved(g5students.concat(virtualData.g5students)),
       ghanastudent: averageSolved(
         ghanastudent.concat(virtualData.ghanastudent),
@@ -117,10 +118,12 @@ export async function Contest(contestId: string) {
         aastug4student.concat(virtualData.aastug4student),
         aastug4,
       ),
+      all: [],
     },
     virtual: {
       ...virtualData,
     },
+    all: participantInfo,
     ghanastudent,
     aastug4student,
     AAIT_G4student,

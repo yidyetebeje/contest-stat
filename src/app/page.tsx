@@ -68,7 +68,7 @@ export default async function Home() {
         })}
       </div>
       <h1 className="text-3xl font-extrabold py-10 text-start">
-        Live Contest Standing
+        Contest Standing
       </h1>
       <Tabs defaultValue="All" className="w-full">
         <TabsList>
@@ -86,38 +86,6 @@ export default async function Home() {
                   <DataTable
                     columns={columns}
                     data={data[el.accessor].map((d, index) => {
-                      return {
-                        ...d,
-                        index: index + 1,
-                      };
-                    })}
-                  />
-                </div>
-              </Suspense>
-            </TabsContent>
-          );
-        })}
-        <TabsContent value="password">Change your password here.</TabsContent>
-      </Tabs>
-      <h1 className="text-3xl font-extrabold py-10 text-start">
-        Virtual Contest Standing
-      </h1>
-      <Tabs defaultValue="All" className="w-full">
-        <TabsList>
-          {groups.map((el) => (
-            <TabsTrigger key={el.name} value={el.name}>
-              {el.name}
-            </TabsTrigger>
-          ))}
-        </TabsList>
-        {groups.map((el) => {
-          return (
-            <TabsContent value={el.name} key={el.name}>
-              <Suspense fallback={<div>Loading</div>}>
-                <div className="w-full">
-                  <DataTable
-                    columns={columns}
-                    data={data.virtual[el.accessor].map((d, index) => {
                       return {
                         ...d,
                         index: index + 1,

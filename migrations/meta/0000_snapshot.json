@@ -1,0 +1,188 @@
+{
+  "id": "69340153-1dd1-4687-8f2a-b22127e9ceae",
+  "prevId": "00000000-0000-0000-0000-000000000000",
+  "version": "6",
+  "dialect": "postgresql",
+  "tables": {
+    "public.contest": {
+      "name": "contest",
+      "schema": "",
+      "columns": {
+        "contest_id": {
+          "name": "contest_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "name": {
+          "name": "name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "no_questions": {
+          "name": "no_questions",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "contest_contest_id_unique": {
+          "name": "contest_contest_id_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "contest_id"
+          ]
+        }
+      }
+    },
+    "public.contest_interaction": {
+      "name": "contest_interaction",
+      "schema": "",
+      "columns": {
+        "contest_id": {
+          "name": "contest_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "cf_handle": {
+          "name": "cf_handle",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "rank": {
+          "name": "rank",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "no_solved": {
+          "name": "no_solved",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "participant_type": {
+          "name": "participant_type",
+          "type": "participant_type",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "penality": {
+          "name": "penality",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "contest_interaction_contest_id_contest_contest_id_fk": {
+          "name": "contest_interaction_contest_id_contest_contest_id_fk",
+          "tableFrom": "contest_interaction",
+          "tableTo": "contest",
+          "columnsFrom": [
+            "contest_id"
+          ],
+          "columnsTo": [
+            "contest_id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "contest_interaction_cf_handle_student_cf_handle_fk": {
+          "name": "contest_interaction_cf_handle_student_cf_handle_fk",
+          "tableFrom": "contest_interaction",
+          "tableTo": "student",
+          "columnsFrom": [
+            "cf_handle"
+          ],
+          "columnsTo": [
+            "cf_handle"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {
+        "contest_interaction_cf_handle_contest_id_pk": {
+          "name": "contest_interaction_cf_handle_contest_id_pk",
+          "columns": [
+            "cf_handle",
+            "contest_id"
+          ]
+        }
+      },
+      "uniqueConstraints": {}
+    },
+    "public.student": {
+      "name": "student",
+      "schema": "",
+      "columns": {
+        "name": {
+          "name": "name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "group": {
+          "name": "group",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "school": {
+          "name": "school",
+          "type": "school",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "cf_handle": {
+          "name": "cf_handle",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {}
+    }
+  },
+  "enums": {
+    "public.participant_type": {
+      "name": "participant_type",
+      "schema": "public",
+      "values": [
+        "CONTESTANT",
+        "VIRTUAL",
+        "PRACTICE"
+      ]
+    },
+    "public.school": {
+      "name": "school",
+      "schema": "public",
+      "values": [
+        "AASTU",
+        "AAiT",
+        "Ghana",
+        "ASTU"
+      ]
+    }
+  },
+  "schemas": {},
+  "_meta": {
+    "columns": {},
+    "schemas": {},
+    "tables": {}
+  }
+}

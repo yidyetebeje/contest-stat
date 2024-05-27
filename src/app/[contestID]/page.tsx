@@ -44,52 +44,51 @@ export default async function Home({
 }: {
   params: { contestID: string };
 }) {
-  return <div>Hello</div>;
-  // let contest_data: ApiResponse;
-  // try {
-  //   let data = await fetch(local_url + params.contestID, {
-  //     cache: "no-cache",
-  //   });
-  //
-  //   contest_data = await data.json();
-  // } catch (ex) {
-  //   console.log(ex);
-  //   contest_data = {
-  //     stats: [],
-  //     standing: [],
-  //     absents: [],
-  //   };
-  // }
-  // return (
-  //   <main className="flex py-20 flex-col gap-10 lg:w-5/6 w-11/12 mx-auto">
-  //     <div className="flex flex-col gap-5">
-  //       <h1 className="text-3xl font-bold">Average Solved Per Group</h1>
-  //       <div className="flex gap-10">
-  //         {contest_data.stats.map((el) => {
-  //           return (
-  //             <Card
-  //               key={el.school}
-  //               className="flex py-5 flex-col items-center justify-center w-48"
-  //             >
-  //               <CardContent>
-  //                 <p className="text-4xl font-semibold">
-  //                   {parseFloat(el.avg).toFixed(2) ?? 0}{" "}
-  //                 </p>
-  //                 <p>{`${el.school} G${el.group}`}</p>
-  //               </CardContent>
-  //             </Card>
-  //           );
-  //         })}
-  //       </div>
-  //     </div>
-  //     <div className="flex flex-col gap-5">
-  //       <h1 className="text-3xl font-bold">Contest Standing</h1>
-  //       <DataTable columns={columns} data={contest_data.standing} />
-  //     </div>
-  //     <div className="flex flex-col gap-5">
-  //       <h1 className="text-3xl font-bold">Absent Students</h1>
-  //       <DataTable columns={absentColumns} data={contest_data.absents} />
-  //     </div>
-  //   </main>
-  // );
+  let contest_data: ApiResponse;
+  try {
+    let data = await fetch(local_url + params.contestID, {
+      cache: "force-cache",
+    });
+
+    contest_data = await data.json();
+  } catch (ex) {
+    console.log(ex);
+    contest_data = {
+      stats: [],
+      standing: [],
+      absents: [],
+    };
+  }
+  return (
+    <main className="flex py-20 flex-col gap-10 lg:w-5/6 w-11/12 mx-auto">
+      <div className="flex flex-col gap-5">
+        <h1 className="text-3xl font-bold">Average Solved Per Group</h1>
+        <div className="flex gap-10">
+          {contest_data.stats.map((el) => {
+            return (
+              <Card
+                key={el.school}
+                className="flex py-5 flex-col items-center justify-center w-48"
+              >
+                <CardContent>
+                  <p className="text-4xl font-semibold">
+                    {parseFloat(el.avg).toFixed(2) ?? 0}{" "}
+                  </p>
+                  <p>{`${el.school} G${el.group}`}</p>
+                </CardContent>
+              </Card>
+            );
+          })}
+        </div>
+      </div>
+      <div className="flex flex-col gap-5">
+        <h1 className="text-3xl font-bold">Contest Standing</h1>
+        <DataTable columns={columns} data={contest_data.standing} />
+      </div>
+      <div className="flex flex-col gap-5">
+        <h1 className="text-3xl font-bold">Absent Students</h1>
+        <DataTable columns={absentColumns} data={contest_data.absents} />
+      </div>
+    </main>
+  );
 }

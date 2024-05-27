@@ -18,6 +18,10 @@ export const metadata: Metadata = {
   title: "Contest Stat",
   description: "A website to show contest statistics",
 };
+const poppins = Poppins({
+  weight: ["100", "300", "400", "500", "700", "900"],
+  subsets: ["latin"],
+});
 
 export default function RootLayout({
   children,
@@ -26,7 +30,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={roboto.className}>
+      <body className={poppins.className}>
         <ThemeProvider
           attribute="class"
           defaultTheme="dark"

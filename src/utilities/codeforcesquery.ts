@@ -1,8 +1,9 @@
+import { insertContest } from "@/db/queries";
 import crypto from "crypto";
 // Create a MongoClient with a MongoClientOptions object to set the Stable API version
 export const apiKey = "44cfcb065b39a1d98756b6d4335dacfb1274be38";
 export const secret = "0ce71e2af1be124c5f1c5d45a3ebef42dcc24a92";
-export async function Contest(contestId: string) {
+export async function CodeforceStandingApi(contestId: string) {
   const from = 1;
   const count = 300;
   const showUnofficial = true;
@@ -19,9 +20,10 @@ export async function Contest(contestId: string) {
   const data = await response.json();
   const contestinfo = {
     contest_id: data.result.contest.id,
-    name: data.result.contest.name,
-    season: data.result.contest.season,
+    contest_name: data.result.contest.name,
+    no_questions: data.result.problems.length,
   };
+  console.log(data.result.contest.name);
 
   let virtualParticipant = data.result.rows.filter(
     (el: any) =>
@@ -35,8 +37,19 @@ export async function Contest(contestId: string) {
       rank: el.rank,
       no_solved: el.points,
       participant_type: el.party.participantType,
-      penality: el.penality,
+      penality: el.penalty,
     };
   });
+  const seenHandles = new Set();
+  participantInfo = participantInfo.filter((el: any) => {
+    const handle = el.cf_handle;
+    if (!seenHandles.has(handle)) {
+      seenHandles.add(handle);
+      return true; // It's a duplicate
+    } else {
+      return false;
+    }
+  });
+  const insertData = await insertContest({ contestinfo, participantInfo });
   return { contestinfo, participantInfo };
 }

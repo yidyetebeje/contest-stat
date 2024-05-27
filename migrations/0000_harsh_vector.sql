@@ -11,10 +11,9 @@ EXCEPTION
 END $$;
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "contest" (
-	"contest_id" text,
+	"contest_id" text PRIMARY KEY NOT NULL,
 	"name" text,
-	"no_questions" integer,
-	CONSTRAINT "contest_contest_id_unique" UNIQUE("contest_id")
+	"no_questions" integer
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "contest_interaction" (

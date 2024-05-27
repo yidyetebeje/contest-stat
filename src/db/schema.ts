@@ -31,7 +31,7 @@ export const studentRelation = relations(Student, ({ many }) => ({
 }));
 
 export const Contest = pgTable("contest", {
-  contest_id: text("contest_id").unique(),
+  contest_id: text("contest_id").primaryKey(),
   contest_name: text("name"),
   no_questions: integer("no_questions"),
 });

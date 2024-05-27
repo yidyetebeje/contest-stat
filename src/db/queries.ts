@@ -1,7 +1,12 @@
 import { db } from ".";
-import { avg, countDistinct, eq } from "drizzle-orm";
-import { ContestInteraction, Student } from "./schema";
-import { Contest } from "@/utilities/codeforcesquery";
+import { avg, countDistinct, eq, notInArray } from "drizzle-orm";
+import {
+  ContestInteraction,
+  InsertContest,
+  InsertContestInteraction,
+  Student,
+  Contest,
+} from "./schema";
 
 export async function getContests() {
   return await db.query.Contest.findMany();
@@ -11,7 +16,8 @@ export async function getStanding(contestId: string) {
     .select()
     .from(ContestInteraction)
     .innerJoin(Student, eq(Student.cf_handle, ContestInteraction.cf_handle))
-    .where(eq(ContestInteraction.contest_id, contestId));
+    .where(eq(ContestInteraction.contest_id, contestId))
+    .orderBy((st) => st.contest_interaction.rank);
   let mapped = standing.map((st) => {
     return {
       ...st.contest_interaction,
@@ -34,10 +40,56 @@ export async function aggregateStanding(contestId: string) {
       eq(Student.cf_handle, ContestInteraction.cf_handle),
     )
     .where(eq(ContestInteraction.contest_id, contestId))
-    .groupBy((t) => [t.group, t.school]);
+    .groupBy((t) => [t.group, t.school])
+    .orderBy((t) => t.avg);
 
   return average;
 }
 export async function getAbsents(contestId: string) {
-  // TODO: to be implemented
+  const nonParticipants = await db
+    .select()
+    .from(Student)
+    .where((student) =>
+      notInArray(
+        student.cf_handle,
+        db
+          .select({ cf_handle: ContestInteraction.cf_handle })
+          .from(ContestInteraction)
+          .where(eq(ContestInteraction.contest_id, contestId)),
+      ),
+    );
+  // const nonParticipants = await db.query.Student.findMany({
+  //   where: (Student, { sql }) =>
+  //     sql`${Student.cf_handle} NOT IN (
+  //       SELECT ${ContestInteraction.cf_handle}
+  //       FROM ${ContestInteraction}
+  //       WHERE ${eq(ContestInteraction.contest_id, contestId)}
+  //   )`,
+  // });
+  return nonParticipants;
+}
+export async function insertStudents() {
+  const students = await fetch("https://sheetdb.io/api/v1/ol9aqoixrsqxd");
+  const data = await students.json();
+  const studentsData = data.map((student: any) => {
+    return {
+      cf_handle: student.handle.toLowerCase(),
+      school: student.school,
+      group: student.group,
+      name: student.name,
+    };
+  });
+  console.log("I reached here");
+  const d = await db.select().from(Student);
+  console.log(d, "we are here");
+  await db.insert(Student).values(studentsData);
+}
+interface ContestDto {
+  contestinfo: InsertContest;
+  participantInfo: InsertContestInteraction[];
+}
+export async function insertContest(contest: ContestDto) {
+  const contestData = contest;
+  await db.insert(Contest).values([contestData.contestinfo]);
+  await db.insert(ContestInteraction).values(contestData.participantInfo);
 }

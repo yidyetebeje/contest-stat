@@ -1,5 +1,5 @@
 {
-  "id": "69340153-1dd1-4687-8f2a-b22127e9ceae",
+  "id": "6e11dc2d-d637-40e7-8222-59d1a5f567dc",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "6",
   "dialect": "postgresql",
@@ -11,8 +11,8 @@
         "contest_id": {
           "name": "contest_id",
           "type": "text",
-          "primaryKey": false,
-          "notNull": false
+          "primaryKey": true,
+          "notNull": true
         },
         "name": {
           "name": "name",
@@ -30,15 +30,7 @@
       "indexes": {},
       "foreignKeys": {},
       "compositePrimaryKeys": {},
-      "uniqueConstraints": {
-        "contest_contest_id_unique": {
-          "name": "contest_contest_id_unique",
-          "nullsNotDistinct": false,
-          "columns": [
-            "contest_id"
-          ]
-        }
-      }
+      "uniqueConstraints": {}
     },
     "public.contest_interaction": {
       "name": "contest_interaction",

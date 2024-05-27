@@ -46,7 +46,7 @@ export default async function Home({
 }) {
   let contest_data: ApiResponse;
   try {
-    let data = await fetch(local_url + params.contestID, {
+    let data = await fetch(remote_url + params.contestID, {
       cache: "force-cache",
     });
 

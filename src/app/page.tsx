@@ -21,7 +21,7 @@ const remote_url = "https://contest-stat.vercel.app/api";
 export default async function Home() {
   let contest_list = [];
   try {
-    let data = await fetch(local_url, {
+    let data = await fetch(remote_url, {
       cache: "no-cache",
     });
     contest_list = await data.json();

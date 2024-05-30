@@ -1,3 +1,4 @@
+import { db } from "@/db";
 import { insertContest } from "@/db/queries";
 import crypto from "crypto";
 // Create a MongoClient with a MongoClientOptions object to set the Stable API version
@@ -30,6 +31,8 @@ export async function CodeforceStandingApi(contestId: string) {
       el.party.participantType === "VIRTUAL" ||
       el.party.participantType === "CONTESTANT",
   );
+  let getStudents = await db.query.Student.findMany();
+  let studentHandles = getStudents.map((el: any) => el.cf_handle);
   let participantInfo = virtualParticipant.map((el: any) => {
     return {
       cf_handle: el.party.members[0].handle.toLowerCase(),
@@ -50,6 +53,9 @@ export async function CodeforceStandingApi(contestId: string) {
       return false;
     }
   });
+  participantInfo = participantInfo.filter((el: any) =>
+    studentHandles.includes(el.cf_handle),
+  );
   const insertData = await insertContest({ contestinfo, participantInfo });
   return { contestinfo, participantInfo };
 }

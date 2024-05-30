@@ -93,3 +93,30 @@ export async function insertContest(contest: ContestDto) {
   await db.insert(Contest).values([contestData.contestinfo]);
   await db.insert(ContestInteraction).values(contestData.participantInfo);
 }
+export async function studentInfoAggregate() {
+  const contestNotToInclude = [525050];
+  const average = await db
+    .select({
+      cf_handle: ContestInteraction.cf_handle,
+      avg: avg(ContestInteraction.no_solved),
+    })
+    .from(ContestInteraction)
+    .groupBy((t) => t.cf_handle);
+  const students = await fetch("https://sheetdb.io/api/v1/ol9aqoixrsqxd", {
+    cache: "no-store",
+  });
+  const data = await students.json();
+  const wkmap = new Map();
+  data.forEach((el: any) => {
+    wkmap.set(el.handle.toLowerCase(), el);
+  });
+  const studentData = average.map((el: any) => {
+    return {
+      cf_handle: el.cf_handle,
+      avg: el.avg,
+      ...wkmap.get(el.cf_handle),
+    };
+  });
+
+  return studentData;
+}

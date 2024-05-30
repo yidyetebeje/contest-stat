@@ -43,6 +43,10 @@ export const absentColumns: ColumnDef<AbsentInfo>[] = [
     header: "Name",
   },
   {
+    accessorKey: "cf_handle",
+    header: "Codeforce",
+  },
+  {
     accessorKey: "school",
     header: "School",
     filterFn: (row, id, value) => {
@@ -66,6 +70,11 @@ export const columns: ColumnDef<ContestInfo>[] = [
     accessorKey: "name",
     header: "Name",
   },
+  {
+    accessorKey: "cf_handle",
+    header: "Codeforce",
+  },
+
   {
     accessorKey: "no_solved",
     header: ({ column }) => {

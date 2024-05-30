@@ -33,9 +33,9 @@ export default async function Home() {
   return (
     <main className="flex flex-col py-24 gap-10 lg:w-5/6 w-11/12 mx-auto">
       <Suspense fallback={<div>Loading...</div>}>
-        <Card className="w-64">
+        <Card className="w-3/4 mx-auto">
           <CardHeader>
-            <CardTitle>Contest List</CardTitle>
+            <CardTitle className="text-3xl">Contest List</CardTitle>
           </CardHeader>
           <CardContent>
             {contest_list &&
@@ -45,7 +45,7 @@ export default async function Home() {
                     href={`/${contest.contest_id}`}
                     className="text-blue-700 text-2xl"
                   >
-                    {index + 1}.{contest.contest_name}
+                    {index + 1}. {contest.contest_name}
                   </Link>
                 </div>
               ))}

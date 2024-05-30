@@ -9,7 +9,10 @@ import {
 } from "./schema";
 
 export async function getContests() {
-  return await db.query.Contest.findMany();
+  return await db
+    .select()
+    .from(Contest)
+    .orderBy((t) => t.contest_id);
 }
 export async function getStanding(contestId: string) {
   let standing = await db
@@ -97,6 +100,7 @@ export async function studentInfoAggregate() {
   const contestNotToInclude = [525050];
   const average = await db
     .select({
+      participant_number: countDistinct(ContestInteraction.cf_handle),
       cf_handle: ContestInteraction.cf_handle,
       avg: avg(ContestInteraction.no_solved),
     })

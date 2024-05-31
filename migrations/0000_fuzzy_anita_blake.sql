@@ -1,4 +1,10 @@
 DO $$ BEGIN
+ CREATE TYPE "public"."held" AS ENUM('inperson', 'remote');
+EXCEPTION
+ WHEN duplicate_object THEN null;
+END $$;
+--> statement-breakpoint
+DO $$ BEGIN
  CREATE TYPE "public"."participant_type" AS ENUM('CONTESTANT', 'VIRTUAL', 'PRACTICE');
 EXCEPTION
  WHEN duplicate_object THEN null;
@@ -13,7 +19,8 @@ END $$;
 CREATE TABLE IF NOT EXISTS "contest" (
 	"contest_id" text PRIMARY KEY NOT NULL,
 	"name" text,
-	"no_questions" integer
+	"no_questions" integer,
+	"held" "held"
 );
 --> statement-breakpoint
 CREATE TABLE IF NOT EXISTS "contest_interaction" (
@@ -30,6 +37,7 @@ CREATE TABLE IF NOT EXISTS "student" (
 	"name" text,
 	"group" text NOT NULL,
 	"school" "school",
+	"generation" integer,
 	"cf_handle" text PRIMARY KEY NOT NULL
 );
 --> statement-breakpoint

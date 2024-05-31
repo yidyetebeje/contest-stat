@@ -33,7 +33,7 @@ export async function aggregateStanding(contestId: string) {
   let average = await db
     .select({
       school: Student.school,
-      group: Student.group,
+      group: Student.generation,
       avg: avg(ContestInteraction.no_solved),
       participant_number: countDistinct(ContestInteraction.cf_handle),
     })
@@ -72,8 +72,12 @@ export async function getAbsents(contestId: string) {
   return nonParticipants;
 }
 export async function insertStudents() {
-  const students = await fetch("https://sheetdb.io/api/v1/ol9aqoixrsqxd");
+  const students = await fetch("https://sheetdb.io/api/v1/ol9aqoixrsqxd", {
+    cache: "no-cache",
+  });
   const data = await students.json();
+  console.log(data);
+
   const studentsData = data.map((student: any) => {
     return {
       cf_handle: student.handle.toLowerCase(),
@@ -82,9 +86,7 @@ export async function insertStudents() {
       name: student.name,
     };
   });
-  console.log("I reached here");
   const d = await db.select().from(Student);
-  console.log(d, "we are here");
   await db.insert(Student).values(studentsData);
 }
 interface ContestDto {

@@ -25,10 +25,6 @@ export type ContestList = {
 };
 export const contest_column: ColumnDef<ContestList>[] = [
   {
-    header: "#",
-    cell: (app) => app.row.index + 1,
-  },
-  {
     accessorKey: "name",
     header: "Name",
   },
@@ -57,7 +53,7 @@ export const absentColumns: ColumnDef<AbsentInfo>[] = [
     accessorKey: "group",
     header: "Group",
     filterFn: (row, id, value) => {
-      return value.includes(row.getValue(id));
+      return value.includes(row.getValue(id)[0]);
     },
   },
 ];
@@ -74,6 +70,23 @@ export const columns: ColumnDef<ContestInfo>[] = [
     accessorKey: "cf_handle",
     header: "Codeforce",
   },
+  {
+    accessorKey: "rank",
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Global Rank
+          <CaretSortIcon className="ml-2 h-4 w-4" />
+        </Button>
+      );
+    },
+    cell: ({ getValue }) => {
+      return <span className="pl-5">{getValue()}</span>;
+    },
+  },
 
   {
     accessorKey: "no_solved",
@@ -88,26 +101,29 @@ export const columns: ColumnDef<ContestInfo>[] = [
         </Button>
       );
     },
+    cell: ({ getValue }) => {
+      return <span className="pl-5">{getValue()}</span>;
+    },
   },
   {
-    accessorKey: "rank",
+    accessorKey: "group",
     header: ({ column }) => {
       return (
         <Button
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Global Rank
+          Group
           <CaretSortIcon className="ml-2 h-4 w-4" />
         </Button>
       );
     },
-  },
-  {
-    accessorKey: "group",
-    header: "Group",
+    cell: ({ getValue }) => {
+      return <span className="pl-5">{getValue()}</span>;
+    },
+
     filterFn: (row, id, value) => {
-      return value.includes(row.getValue(id));
+      return value.includes(row.getValue(id)[0]);
     },
   },
   {

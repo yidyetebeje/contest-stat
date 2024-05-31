@@ -6,7 +6,7 @@ export const apiKey = "44cfcb065b39a1d98756b6d4335dacfb1274be38";
 export const secret = "0ce71e2af1be124c5f1c5d45a3ebef42dcc24a92";
 export async function CodeforceStandingApi(contestId: string) {
   const from = 1;
-  const count = 300;
+  const count = 500;
   const showUnofficial = true;
   const base_url = `https://codeforces.com/api/contest.standings?contestId=${contestId}&from=${from}&count=${count}&showUnofficial=${showUnofficial}`;
   const timestamp = Math.round(new Date().getTime() / 1000);
@@ -59,3 +59,5 @@ export async function CodeforceStandingApi(contestId: string) {
   const insertData = await insertContest({ contestinfo, participantInfo });
   return { contestinfo, participantInfo };
 }
+
+

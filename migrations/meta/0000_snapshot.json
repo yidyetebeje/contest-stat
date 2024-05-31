@@ -1,5 +1,5 @@
 {
-  "id": "6e11dc2d-d637-40e7-8222-59d1a5f567dc",
+  "id": "a51d0e1c-f942-4c19-b417-f6ff27660990",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "6",
   "dialect": "postgresql",
@@ -23,6 +23,13 @@
         "no_questions": {
           "name": "no_questions",
           "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "held": {
+          "name": "held",
+          "type": "held",
+          "typeSchema": "public",
           "primaryKey": false,
           "notNull": false
         }
@@ -137,6 +144,12 @@
           "primaryKey": false,
           "notNull": false
         },
+        "generation": {
+          "name": "generation",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
         "cf_handle": {
           "name": "cf_handle",
           "type": "text",
@@ -151,6 +164,14 @@
     }
   },
   "enums": {
+    "public.held": {
+      "name": "held",
+      "schema": "public",
+      "values": [
+        "inperson",
+        "remote"
+      ]
+    },
     "public.participant_type": {
       "name": "participant_type",
       "schema": "public",

@@ -20,10 +20,12 @@ export const participantTypeEnum = pgEnum("participant_type", [
   "VIRTUAL",
   "PRACTICE",
 ]);
+export const contestHeld = pgEnum("held", ["inperson", "remote"]);
 export const Student = pgTable("student", {
   name: text("name"),
   group: text("group").notNull(),
   school: schoolEnum("school"),
+  generation: integer("generation"),
   cf_handle: text("cf_handle").primaryKey(),
 });
 export const studentRelation = relations(Student, ({ many }) => ({
@@ -34,6 +36,7 @@ export const Contest = pgTable("contest", {
   contest_id: text("contest_id").primaryKey(),
   contest_name: text("name"),
   no_questions: integer("no_questions"),
+  held: contestHeld("held"),
 });
 export const contestRelation = relations(Contest, ({ many }) => ({
   ContestInteraction: many(ContestInteraction),

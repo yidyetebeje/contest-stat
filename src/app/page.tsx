@@ -18,6 +18,7 @@ import {
 import Link from "next/link";
 const local_url = "http://127.0.0.1:3000/api";
 const remote_url = "https://contest-stat.vercel.app/api";
+export const dynamic = "force-dynamic";
 export default async function Home() {
   let contest_list = [];
   try {

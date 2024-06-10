@@ -95,8 +95,14 @@ interface ContestDto {
 }
 export async function insertContest(contest: ContestDto) {
   const contestData = contest;
-  await db.insert(Contest).values([contestData.contestinfo]);
-  await db.insert(ContestInteraction).values(contestData.participantInfo);
+  await db
+    .insert(Contest)
+    .values([contestData.contestinfo])
+    .onConflictDoNothing();
+  await db
+    .insert(ContestInteraction)
+    .values(contestData.participantInfo)
+    .onConflictDoNothing();
 }
 export async function studentInfoAggregate() {
   const contestNotToInclude = [525050];

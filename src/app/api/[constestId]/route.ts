@@ -5,8 +5,9 @@ import {
   getStanding,
 } from "@/db/queries";
 import { CodeforceStandingApi } from "@/utilities/codeforcesquery";
+import { revalidateTag } from "next/cache";
 import { NextRequest } from "next/server";
-export const dynamic = false;
+export const dynamic = "force-dynamic";
 export async function GET(
   req: NextRequest,
   { params }: { params: { constestId: string } },
@@ -33,6 +34,7 @@ export async function POST(
   const { constestId } = params;
   try {
     const data = await CodeforceStandingApi(constestId);
+    revalidateTag(constestId);
     return Response.json({
       message: "inserted",
     });

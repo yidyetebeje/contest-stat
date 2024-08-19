@@ -11,6 +11,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { DivPromotion } from "@/components/ui/divpromotiontable";
 const local_url = "http://127.0.0.1:3000/api/";
 const remote_url = "https://contest-stat.vercel.app/api/";
 interface ApiResponse {
@@ -44,14 +45,15 @@ export default async function Home({
   params: { contestID: string };
 }) {
   let contest_data: ApiResponse;
+  let promoted_data: any;
   try {
     let data = await fetch(remote_url + params.contestID, {
       next: { tags: [params.contestID] },
     });
-
+    let promoted = await fetch(remote_url +  "/promoted");
+    promoted_data = await promoted.json();
     contest_data = await data.json();
   } catch (ex) {
-    console.log(ex);
     contest_data = {
       stats: [],
       standing: [],
@@ -80,6 +82,16 @@ export default async function Home({
           })}
         </div>
       </div>
+      {
+        params.contestID == "543431" ? (
+          <div className="flex flex-col gap-5 md:w-1/2">
+        <h1 className="text-3xl font-bold">Promoted to Div 1</h1>
+       <DivPromotion title="Promoted Students to Div 1" data={promoted_data['div1']} />
+       <h1 className="text-3xl font-bold">Promoted to Div 2</h1>
+        <DivPromotion title="Promoted Students to Div 2" data={promoted_data['div2']} />
+      </div>
+        ) : null
+      }
       <div className="flex flex-col gap-5">
         <h1 className="text-3xl font-bold">Contest Standing</h1>
         <DataTable columns={columns} data={contest_data.standing} />

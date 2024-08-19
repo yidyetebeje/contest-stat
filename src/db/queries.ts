@@ -1,5 +1,5 @@
 import { db } from ".";
-import { avg, countDistinct, eq, notInArray } from "drizzle-orm";
+import { and, avg, countDistinct, eq, gte, lt, notInArray } from "drizzle-orm";
 import {
   ContestInteraction,
   InsertContest,
@@ -131,4 +131,54 @@ export async function studentInfoAggregate() {
   });
 
   return studentData;
+}
+
+export async function promotedStudent() {
+  // div 1 - above seven problem
+  // div 2 - above six problem
+  // div 3 - all remaining studentData
+  // join student and contest Interaction tbale
+  const contestId = "543431";
+
+  const groupPromoteddiv1 = await db
+    .select({
+      generation: Student.generation,
+      school: Student.school,
+      count: countDistinct(ContestInteraction.cf_handle),
+    })
+    .from(Student)
+    .innerJoin(
+      ContestInteraction,
+      eq(Student.cf_handle, ContestInteraction.cf_handle),
+    )
+    .where(
+      and(
+        eq(ContestInteraction.contest_id, contestId),
+        gte(ContestInteraction.no_solved, 7),
+        eq(ContestInteraction.participant_type, "CONTESTANT"),
+      ),
+    )
+    .groupBy((t) => [t.generation, t.school]);
+  const groupPromoteddiv2 = await db
+    .select({
+      generation: Student.generation,
+      school: Student.school,
+      count: countDistinct(ContestInteraction.cf_handle),
+    })
+    .from(Student)
+    .innerJoin(
+      ContestInteraction,
+      eq(Student.cf_handle, ContestInteraction.cf_handle),
+    )
+    .where(
+      and(
+        eq(ContestInteraction.contest_id, contestId),
+        gte(ContestInteraction.no_solved, 5),
+        lt(ContestInteraction.no_solved, 7),
+        eq(ContestInteraction.participant_type, "CONTESTANT"),
+      ),
+    )
+    .groupBy((t) => [t.generation, t.school]);
+
+  return { div1: groupPromoteddiv1, div2: groupPromoteddiv2 };
 }
